@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SharePoint Clock</title>
+  <style>
+    :root {
+      --bg: transparent;
+      --color: #0b3d91;
+      --size: 32px;
+      --weight: 600;
+      --family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    }
+    html, body {
+      height: 100%;
+      margin: 0;
+      background: var(--bg);
+    }
+    .wrap {
+      display: grid;
+      place-items: center;
+      height: 100%;
+      padding: 8px 12px;
+      box-sizing: border-box;
+    }
+    #clock {
+      font-size: var(--size);
+      color: var(--color);
+      font-weight: var(--weight);
+      font-family: var(--family);
+      line-height: 1.2;
+      white-space: nowrap;
+    }
+    .subtitle {
+      font-size: calc(var(--size) * 0.4);
+      opacity: 0.75;
+      text-align: center;
+      margin-top: 4px;
+      font-family: var(--family);
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div>
+      <div id="clock">--:--:--</div>
+      <div id="subtitle" class="subtitle"></div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const params = new URLSearchParams(window.location.search);
+
+      const tz      = params.get("tz")      || "Europe/Copenhagen";
+      const size    = params.get("size")    || "32";
+      const color   = params.get("color")   || "#0b3d91";
+      const bg      = params.get("bg")      || "transparent";
+      const weight  = params.get("weight")  || "600";
+      const family  = params.get("family")  || "";
+      const format  = params.get("format")  || "24"; // "24" or "12"
+
+      // Apply styles
+      document.documentElement.style.setProperty("--bg", bg);
+      document.documentElement.style.setProperty("--color", color);
+      document.documentElement.style.setProperty("--size", size.endsWith("px") ? size : size + "px");
+      document.documentElement.style.setProperty("--weight", weight);
+      if (family) {
+        document.documentElement.style.setProperty("--family", family);
+      }
+
+      const clockEl = document.getElementById("clock");
+      const subEl   = document.getElementById("subtitle");
+
+      function tick() {
+        const now = new Date();
+        const use12 = format === "12";
+        const parts = new Intl.DateTimeFormat("en-GB", {
+          hour: "numeric",
+          minute: "2-digit",
+          second: "2-digit",
+          hour12: use12,
+          timeZone: tz
+        }).formatToParts(now);
+
+        // Build HH:MM:SS (and AM/PM if 12h)
+        let h = parts.find(p => p.type === "hour")?.value ?? "--";
+        let m = parts.find(p => p.type === "minute")?.value ?? "--";
+        let s = parts.find(p => p.type === "second")?.value ?? "--";
+        let dayPeriod = parts.find(p => p.type === "dayPeriod")?.value ?? "";
+
+        // Pad hour to 2 digits for consistency
+        if (h && h.length === 1) h = "0" + h;
+
+        clockEl.textContent = `${h}:${m}:${s}${use12 && dayPeriod ? " " + dayPeriod.toUpperCase() : ""}`;
+
+        // Subtitle shows timezone and date
+        const dateStr = new Intl.DateTimeFormat("en-GB", {
+          weekday: "short",
+          year: "numeric",
+          month: "short",
+          day: "2-digit",
+          timeZone: tz
+        }).format(now);
+        subEl.textContent = `${tz} — ${dateStr}`;
+      }
+
+      tick();
+      setInterval(tick, 1000);
+    })();
+  </script>
+</body>
+</html>
