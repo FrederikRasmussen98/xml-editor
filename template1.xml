@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Project>
+  <Name>Machine Setup</Name>
+  <ID>001</ID>
+  <Date>2025-08-20</Date>
+  <Configuration>
+    <Parameter name="Speed" unit="rpm">1500</Parameter>
+    <Parameter name="Temperature" unit="C">75</Parameter>
+    <Parameter name="Pressure" unit="bar">5</Parameter>
+  </Configuration>
+</Project>

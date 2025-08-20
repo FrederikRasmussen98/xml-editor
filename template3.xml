@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Inventory>
+  <Item>
+    <ID>1001</ID>
+    <Name>Motor</Name>
+    <Quantity>5</Quantity>
+    <Location>Warehouse A</Location>
+  </Item>
+  <Item>
+    <ID>1002</ID>
+    <Name>Sensor</Name>
+    <Quantity>12</Quantity>
+    <Location>Warehouse B</Location>
+  </Item>
+  <Item>
+    <ID>1003</ID>
+    <Name>PLC Controller</Name>
+    <Quantity>3</Quantity>
+    <Location>Warehouse C</Location>
+  </Item>
+</Inventory>

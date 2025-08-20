@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<UserProfile>
+  <User>
+    <ID>U123</ID>
+    <Name>Frederik Rasmussen</Name>
+    <Role>Automation Engineer</Role>
+    <Email>frederik@example.com</Email>
+  </User>
+  <Preferences>
+    <Language>English</Language>
+    <Theme>Dark</Theme>
+    <Notifications enabled="true"/>
+  </Preferences>
+</UserProfile>
