@@ -4,16 +4,23 @@
   <meta charset="UTF-8">
   <title>XML Exporter</title>
   <style>
-    body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
-    button {
-      padding: 10px 20px;
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 50px;
+    }
+    select, input, button {
+      padding: 10px;
       margin: 10px;
       font-size: 16px;
-      cursor: pointer;
       border-radius: 8px;
-      border: none;
+      border: 1px solid #ccc;
+    }
+    button {
       background-color: #0b3d91;
       color: white;
+      border: none;
+      cursor: pointer;
     }
     button:hover {
       background-color: #092c66;
@@ -22,22 +29,69 @@
 </head>
 <body>
   <h2>Export XML Templates</h2>
-  <p>Click a button to download the corresponding XML template.</p>
+  <p>Select a machine and enter parameters to download a customized XML file.</p>
 
-  <button onclick="downloadXML('template1.xml')">Export Template 1</button>
-  <button onclick="downloadXML('template2.xml')">Export Template 2</button>
-  <button onclick="downloadXML('template3.xml')">Export Template 3</button>
+  <select id="machineSelect">
+    <option value="">Select a machine</option>
+  </select><br>
+
+  <input type="text" id="applianceName" placeholder="Appliance Name"><br>
+  <input type="text" id="wifiSSID" placeholder="WiFi SSID"><br>
+
+  <button onclick="exportXML()">Export XML</button>
 
   <script>
-    function downloadXML(filename) {
-      // Build full path relative to your repo
-      const url = filename; 
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = filename; // force download instead of open in browser
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+    let machineMap = {};
+
+    // Load machine-template mapping
+    fetch('machine_templates.json')
+      .then(res => res.json())
+      .then(data => {
+        machineMap = data;
+        const select = document.getElementById('machineSelect');
+        Object.keys(data).forEach(machine => {
+          const option = document.createElement('option');
+          option.value = machine;
+          option.textContent = machine;
+          select.appendChild(option);
+        });
+      });
+
+    function exportXML() {
+      const machine = document.getElementById('machineSelect').value;
+      const applianceName = document.getElementById('applianceName').value;
+      const wifiSSID = document.getElementById('wifiSSID').value;
+
+      if (!machine || !applianceName || !wifiSSID) {
+        alert("Please fill in all fields.");
+        return;
+      }
+
+      const templateFile = machineMap[machine];
+      fetch(templateFile)
+        .then(res => res.text())
+        .then(xmlText => {
+          const parser = new DOMParser();
+          const xmlDoc = parser.parseFromString(xmlText, "application/xml");
+
+          // Update common parameters
+          const applianceNode = xmlDoc.getElementsByTagName("appliance_name")[0];
+          const wifiNode = xmlDoc.getElementsByTagName("wifi_ssid")[0];
+
+          if (applianceNode) applianceNode.textContent = applianceName;
+          if (wifiNode) wifiNode.textContent = wifiSSID;
+
+          const serializer = new XMLSerializer();
+          const updatedXML = serializer.serializeToString(xmlDoc);
+
+          const blob = new Blob([updatedXML], { type: "application/xml" });
+          const link = document.createElement('a');
+          link.href = URL.createObjectURL(blob);
+          link.download = `${machine.replace(/\s+/g, '_')}_config.xml`;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        });
     }
   </script>
 </body>
