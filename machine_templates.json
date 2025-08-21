@@ -1,6 +1,6 @@
 
 {
-  "Machine A": "template1.xml",
-  "Machine B": "template2.xml",
-  "Machine C": "template3.xml"
+  "Impact": "templates/template1.xml",
+  "Labsaw": "templates/template2.xml",
+  "Burst One": "templates/template3.xml"
 }

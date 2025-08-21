@@ -28,9 +28,6 @@
   </style>
 </head>
 <body>
-  <h2>Export XML Templates</h2>
-  <p>Select a machine and enter parameters to download a customized XML file.</p>
-
   <select id="machineSelect">
     <option value="">Select a machine</option>
   </select><br>
@@ -38,7 +35,7 @@
   <input type="text" id="applianceName" placeholder="Appliance Name"><br>
   <input type="text" id="wifiSSID" placeholder="WiFi SSID"><br>
 
-  <button onclick="exportXML()">Export XML</button>
+  <button onclick="exportXML()">Export SiteManager USB install</button>
 
   <script>
     let machineMap = {};
@@ -91,7 +88,7 @@
           const blob = new Blob([updatedXML], { type: "application/xml" });
           const link = document.createElement('a');
           link.href = URL.createObjectURL(blob);
-          link.download = `${machine.replace(/\s+/g, '_')}_config.xml`;
+          link.download = `SITEMANAGER.CFG`;
           document.body.appendChild(link);
           link.click();
           document.body.removeChild(link);
