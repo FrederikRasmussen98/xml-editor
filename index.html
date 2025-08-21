@@ -74,12 +74,16 @@
           const parser = new DOMParser();
           const xmlDoc = parser.parseFromString(xmlText, "application/xml");
 
-          // Update common parameters
-          const applianceNode = xmlDoc.getElementsByTagName("appliance_name")[0];
-          const wifiNode = xmlDoc.getElementsByTagName("wifi_ssid")[0];
-
-          if (applianceNode) applianceNode.textContent = applianceName;
-          if (wifiNode) wifiNode.textContent = wifiSSID;
+          // Update <string> elements by label
+          const strings = xmlDoc.getElementsByTagName("string");
+          for (let i = 0; i < strings.length; i++) {
+            const label = strings[i].getAttribute("label");
+            if (label === "Appliance Name") {
+              strings[i].textContent = applianceName;
+            } else if (label === "WiFi SSID") {
+              strings[i].textContent = wifiSSID;
+            }
+          }
 
           const serializer = new XMLSerializer();
           const updatedXML = serializer.serializeToString(xmlDoc);

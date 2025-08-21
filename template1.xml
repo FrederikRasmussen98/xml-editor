@@ -4,8 +4,10 @@
   <ID>001</ID>
   <Date>2025-08-20</Date>
   <Configuration>
+  <Parameter name="Speed" unit="rpm">1500</Parameter>
     <Parameter name="Speed" unit="rpm">1500</Parameter>
     <Parameter name="Temperature" unit="C">75</Parameter>
-    <Parameter name="Pressure" unit="bar">5</Parameter>
+    <string label="Appliance Name" id="741">BR_SM_TEST_2</string>
+	<string label="WiFi SSID" id="2625">BR_WIFI_TEST_2</string>
   </Configuration>
 </Project>
